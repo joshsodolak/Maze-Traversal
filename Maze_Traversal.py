@@ -1,4 +1,12 @@
 import queue
+import tkinter
+
+
+class GUI:
+    def __init__(self):
+        window = tkinter.Tk()
+        window.geometry("1080x810")
+        window.mainloop()
 
 
 class Tile:
@@ -141,17 +149,18 @@ def breadthFirstSearch(maze, discovered, startingTile):
 
 
 def main():
-    maze, discovered = createMaze(2)
-    printMaze(maze)
-    startingRow, startingCol = findStartingPoint(maze)
-    startingTile = Tile(startingRow, startingCol, None)
-    print("Start at (" + str(startingTile.row) + ", " + str(startingTile.col) + ")")
-    distance = breadthFirstSearch(maze, discovered, startingTile)
-    printMaze(maze)
-    if distance == None:
-        print("Unable to find path!")
-    else:
-        print("Distance from starting point: " + str(distance) + " tiles")
+    gui = GUI()
+    # maze, discovered = createMaze(2)
+    # printMaze(maze)
+    # startingRow, startingCol = findStartingPoint(maze)
+    # startingTile = Tile(startingRow, startingCol, None)
+    # print("Start at (" + str(startingTile.row) + ", " + str(startingTile.col) + ")")
+    # distance = breadthFirstSearch(maze, discovered, startingTile)
+    # printMaze(maze)
+    # if distance == None:
+    #     print("Unable to find path!")
+    # else:
+    #     print("Distance from starting point: " + str(distance) + " tiles")
 
 
 main()
