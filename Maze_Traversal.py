@@ -1,12 +1,23 @@
 import queue
+from tkinter import *
 import tkinter
 
 
 class GUI:
     def __init__(self):
-        window = tkinter.Tk()
-        window.geometry("1080x810")
-        window.mainloop()
+        root = Tk()
+        root.geometry("1080x810")
+        for i in range(15):
+            root.rowconfigure(i, weight=1)
+        for i in range(20):
+            root.columnconfigure(i, weight=1)
+        root.title("Path-Finding Visualizer")
+        defaultImage = PhotoImage(file="Images/Normal_Tile.png")
+        for i in range(15):
+            for j in range(20):
+                tile = Button(root, image=defaultImage)
+                tile.grid(row=i, column=j)
+        root.mainloop()
 
 
 class Tile:
@@ -14,16 +25,6 @@ class Tile:
         self.row = row
         self.col = col
         self.parent = parent
-        self.discovered = False
-
-    def isDiscovered(self):
-        return self.discovered
-
-    def getRow(self):
-        return self.row
-
-    def getCol(self):
-        return self.col
 
 
 def createMaze(seed):
