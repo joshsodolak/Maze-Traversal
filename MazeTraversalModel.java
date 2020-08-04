@@ -9,13 +9,12 @@ public class MazeTraversalModel {
     /**
      * Constructor for MazeTraversalModel
      */
-    public MazeTraversalModel() {
-        this.numRows = /* 15 */10;
-        this.numColumns = /* 25 */10;
+    public MazeTraversalModel(int numRows, int numColumns) {
+        this.numRows = numRows;
+        this.numColumns = numColumns;
         tiles = new MazeTraversalTile[numRows][numColumns];
         instantiateTiles();
         buildMaze(/* 0 */1);
-        printMaze();
     }
 
     /**
