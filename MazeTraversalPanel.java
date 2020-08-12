@@ -57,7 +57,7 @@ public class MazeTraversalPanel extends JPanel {
         private final ImageIcon NORMAL_TILE = new ImageIcon("Images/Normal_Tile.png");
         private final ImageIcon STARTING_TILE = new ImageIcon("Images/Starting_Tile.png");
         private final ImageIcon TARGET_TILE = new ImageIcon("Images/Target_Tile.png");
-        private final ImageIcon WALL_TILE = new ImageIcon("Images/Wall_Tile.jpg");
+        private final ImageIcon WALL_TILE = new ImageIcon("Images/Wall_Tile.png");
 
         public MazeTraversalButton(MazeTraversalTile tile) {
             this.tile = tile;
