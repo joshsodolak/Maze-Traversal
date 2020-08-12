@@ -8,6 +8,9 @@ public class MazeTraversalModel {
 
     /**
      * Constructor for MazeTraversalModel
+     * 
+     * @param numRows    the number of rows in the maze
+     * @param numColumns the number of columns in the maze
      */
     public MazeTraversalModel(int numRows, int numColumns) {
         this.numRows = numRows;
@@ -17,96 +20,12 @@ public class MazeTraversalModel {
         buildMaze(/* 0 */1);
     }
 
-    /**
-     * Internal class for storing all data at each tile in the maze.
-     */
-    private class MazeTraversalTile {
-        private boolean isDiscovered;
-        private String value;
-        private int row;
-        private int column;
-        private MazeTraversalTile parent;
+    public int getNumRows() {
+        return numRows;
+    }
 
-        /**
-         * Constructor for the internal MazeTraversalTile class.
-         */
-        public MazeTraversalTile(int row, int column) {
-            this.isDiscovered = false;
-            this.value = " ";
-            this.row = row;
-            this.column = column;
-            this.parent = null;
-        }
-
-        /**
-         * Accesses and returns the value of isDiscovered
-         * 
-         * @return the value of isDiscovered.
-         */
-        public boolean hasBeenDiscovered() {
-            return isDiscovered;
-        }
-
-        /**
-         * sets isDiscovered to true
-         */
-        public void discover() {
-            isDiscovered = true;
-        }
-
-        /**
-         * Accesses and returns the current value of the tile
-         * 
-         * @return the value of the tile.
-         */
-        public String getValue() {
-            return value;
-        }
-
-        /**
-         * Accesses and returns the row of the tile.
-         * 
-         * @return the row of the tile.
-         */
-        public int getRow() {
-            return row;
-        }
-
-        /**
-         * Accesses and returns the column of the tile.
-         * 
-         * @return the column of the tile.
-         */
-        public int getColumn() {
-            return column;
-        }
-
-        /**
-         * Sets the value stored in the tile to the String passed in as a parameter.
-         * 
-         * @param value the value to be stored in the tile
-         */
-        public void setValue(String value) {
-            this.value = value;
-        }
-
-        /**
-         * Uses the tile's stored value to determine whether it is the start tile.
-         * 
-         * @return true if value = "O", false otherwise.
-         */
-        public boolean isStartingPoint() {
-            return value.equals("O");
-        }
-
-        /**
-         * Uses the tile's stored value to determine whether it is the destination.
-         * 
-         * @return true if value = "X", false otherwise.
-         */
-        public boolean isDestination() {
-            return value.equals("X");
-        }
+    public int getNumColumns() {
+        return numColumns;
     }
 
     /**
@@ -243,31 +162,31 @@ public class MazeTraversalModel {
         if (tile.getRow() == 0) { // North Tile
             availableAdjacent[0] = null;
         } else {
-            availableAdjacent[0] = tiles[tile.row - 1][tile.column];
+            availableAdjacent[0] = tiles[tile.getRow() - 1][tile.getColumn()];
         }
 
         if (tile.getColumn() == numColumns - 1) { // East Tile
             availableAdjacent[1] = null;
         } else {
-            availableAdjacent[1] = tiles[tile.row][tile.column + 1];
+            availableAdjacent[1] = tiles[tile.getRow()][tile.getColumn() + 1];
         }
 
         if (tile.getRow() == numRows - 1) { // South Tile
             availableAdjacent[2] = null;
         } else {
-            availableAdjacent[2] = tiles[tile.row + 1][tile.column];
+            availableAdjacent[2] = tiles[tile.getRow() + 1][tile.getColumn()];
         }
 
         if (tile.getColumn() == 0) { // West Tile
             availableAdjacent[3] = null;
         } else {
-            availableAdjacent[3] = tiles[tile.row][tile.column - 1];
+            availableAdjacent[3] = tiles[tile.getRow()][tile.getColumn() - 1];
         }
 
         for (int i = 0; i < availableAdjacent.length; i++) {
-            if (availableAdjacent[i] != null && availableAdjacent[i].value == "#") {
+            if (availableAdjacent[i] != null && availableAdjacent[i].getValue() == "#") {
                 availableAdjacent[i] = null;
-            } else if (availableAdjacent[i].isDiscovered) {
+            } else if (availableAdjacent[i].hasBeenDiscovered()) {
                 availableAdjacent[i] = null;
             }
         }
@@ -291,12 +210,12 @@ public class MazeTraversalModel {
 
         while (queue.size() > 0) {
             MazeTraversalTile parentTile = queue.poll();
-            if (parentTile.value.equals("X")) {
+            if (parentTile.getValue().equals("X")) {
                 int distance = 1;
-                parentTile = parentTile.parent;
-                while (parentTile.parent != null) {
-                    tiles[parentTile.row][parentTile.column].value = "+";
-                    parentTile = parentTile.parent;
+                parentTile = parentTile.getParent();
+                while (parentTile.getParent() != null) {
+                    tiles[parentTile.getRow()][parentTile.getColumn()].setValue("+");
+                    parentTile = parentTile.getParent();
                     distance++;
                 }
                 return distance;
@@ -310,7 +229,7 @@ public class MazeTraversalModel {
                 MazeTraversalTile currentTile = adjacentTiles[i];
                 if (!currentTile.hasBeenDiscovered()) {
                     currentTile.discover();
-                    currentTile.parent = parentTile;
+                    currentTile.setParent(parentTile);
                     queue.add(currentTile);
                 }
             }
@@ -324,14 +243,14 @@ public class MazeTraversalModel {
     public void printMaze() {
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numColumns; j++) {
-                System.out.print(tiles[i][j].value + " ");
+                System.out.print(tiles[i][j].getValue() + " ");
             }
             System.out.println();
         }
         System.out.println("\n");
-        System.out.println(
-                "Starting position: (" + getStartingPosition().row + ", " + getStartingPosition().column + ")");
-        System.out.println("Destination: (" + getDestination().row + ", " + getDestination().column + ")");
+        System.out.println("Starting position: (" + getStartingPosition().getRow() + ", "
+                + getStartingPosition().getColumn() + ")");
+        System.out.println("Destination: (" + getDestination().getRow() + ", " + getDestination().getColumn() + ")");
 
     }
 
