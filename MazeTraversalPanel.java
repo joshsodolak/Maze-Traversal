@@ -11,10 +11,13 @@ import java.awt.event.KeyListener;
 public class MazeTraversalPanel extends JPanel implements KeyListener {
     private final MazeTraversalFrame frame;
     private final MazeTraversalButton[][] buttons;
+    private boolean startClicked;
+    private boolean targetClicked;
 
     public MazeTraversalPanel(final MazeTraversalFrame frame) {
         this.frame = frame;
         buttons = new MazeTraversalButton[frame.getModel().getNumRows()][frame.getModel().getNumColumns()];
+        startClicked = targetClicked = false;
         setLayout(new GridLayout(frame.getModel().getNumRows(), frame.getModel().getNumColumns()));
         for (int i = 0; i < frame.getModel().getNumRows(); i++) {
             for (int j = 0; j < frame.getModel().getNumColumns(); j++) {
@@ -33,24 +36,61 @@ public class MazeTraversalPanel extends JPanel implements KeyListener {
                 button.addKeyListener(this);
                 button.addMouseListener(new MouseAdapter() {
                     public void mousePressed(final MouseEvent e) {
-                        switch (frame.getModel().getTile(button.tile.getRow(), button.tile.getColumn()).getValue()) {
-                            case " ":
-                                frame.getModel().getTile(button.tile.getRow(), button.tile.getColumn()).setValue("#");
-                                button.setImage("Wall");
-                                break;
-                            case "#":
-                                frame.getModel().getTile(button.tile.getRow(), button.tile.getColumn()).setValue(" ");
-                                button.setImage("Normal");
-                                break;
-                            case "O":
-                                break;
-                            case "X":
-                                break;
-                            default:
-                                break;
+                        if (!startClicked && !targetClicked) {
+                            switch (frame.getModel().getTile(button.tile.getRow(), button.tile.getColumn())
+                                    .getValue()) {
+                                case " ":
+                                    frame.getModel().getTile(button.tile.getRow(), button.tile.getColumn())
+                                            .setValue("#");
+                                    button.setImage("Wall");
+                                    break;
+                                case "#":
+                                    frame.getModel().getTile(button.tile.getRow(), button.tile.getColumn())
+                                            .setValue(" ");
+                                    button.setImage("Normal");
+                                    break;
+                                case "O":
+                                    startClicked = true;
+                                    break;
+                                case "X":
+                                    targetClicked = true;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        } else if (startClicked) {
+                            if (!frame.getModel().getTile(button.tile.getRow(), button.tile.getColumn()).getValue()
+                                    .equals("X")) {
+                                for (int i = 0; i < frame.getModel().getNumRows(); i++) {
+                                    for (int j = 0; j < frame.getModel().getNumColumns(); j++) {
+                                        if (frame.getModel().getTile(i, j).getValue().equals("O")) {
+                                            frame.getModel().getTile(i, j).setValue(" ");
+                                            buttons[i][j].setImage("Normal");
+                                        }
+                                    }
+                                }
+                                frame.getModel().getTile(button.tile.getRow(), button.tile.getColumn()).setValue("O");
+                                button.setImage("Start");
+                                startClicked = false;
+                            }
+                        } else {
+                            if (!frame.getModel().getTile(button.tile.getRow(), button.tile.getColumn()).getValue()
+                                    .equals("O")) {
+                                for (int i = 0; i < frame.getModel().getNumRows(); i++) {
+                                    for (int j = 0; j < frame.getModel().getNumColumns(); j++) {
+                                        if (frame.getModel().getTile(i, j).getValue().equals("X")) {
+                                            frame.getModel().getTile(i, j).setValue(" ");
+                                            buttons[i][j].setImage("Normal");
+                                        }
+                                    }
+                                }
+                                frame.getModel().getTile(button.tile.getRow(), button.tile.getColumn()).setValue("X");
+                                button.setImage("Target");
+                                targetClicked = false;
+                            }
                         }
-                        frame.getModel().printMaze();
-                        System.out.println();
+                        // frame.getModel().printMaze();
+                        // System.out.println();
                     }
                 });
             }
