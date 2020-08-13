@@ -1,4 +1,3 @@
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.Graphics;
 
@@ -32,6 +31,11 @@ public class MazeTraversalTile extends JButton {
      */
     public boolean hasBeenDiscovered() {
         return isDiscovered;
+    }
+
+    public void reset() {
+        isDiscovered = false;
+        parent = null;
     }
 
     /**

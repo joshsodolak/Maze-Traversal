@@ -17,7 +17,11 @@ public class MazeTraversalModel {
         this.numColumns = numColumns;
         tiles = new MazeTraversalTile[numRows][numColumns];
         instantiateTiles();
-        buildMaze(/* 0 */1);
+        // buildMaze(/* 0 */1);
+    }
+
+    public MazeTraversalTile getTile(int row, int column) {
+        return tiles[row][column];
     }
 
     public int getNumRows() {
@@ -204,6 +208,7 @@ public class MazeTraversalModel {
     public int breadthFirstSearch() {
         Queue<MazeTraversalTile> queue = new LinkedList<MazeTraversalTile>();
         MazeTraversalTile startingPosition = getStartingPosition();
+        long startingTime = System.currentTimeMillis();
 
         startingPosition.discover();
         queue.add(startingPosition);
@@ -218,6 +223,8 @@ public class MazeTraversalModel {
                     parentTile = parentTile.getParent();
                     distance++;
                 }
+                System.out.println("Completed in " + (System.currentTimeMillis() - startingTime));
+                System.out.println("All done!");
                 return distance;
             }
             MazeTraversalTile[] adjacentTiles = getAvailableAdjacent(parentTile);
@@ -234,7 +241,17 @@ public class MazeTraversalModel {
                 }
             }
         }
+        System.out.println("Completed in " + (System.currentTimeMillis() - startingTime));
+        System.out.println("All done!");
         return -1;
+    }
+
+    public void resetDiscoveredTiles() {
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numColumns; j++) {
+                tiles[i][j].reset();
+            }
+        }
     }
 
     /**
