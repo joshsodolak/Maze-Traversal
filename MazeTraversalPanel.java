@@ -23,13 +23,13 @@ public class MazeTraversalPanel extends JPanel implements KeyListener {
         setLayout(new GridLayout(frame.getModel().getNumRows(), frame.getModel().getNumColumns()));
         for (int i = 0; i < frame.getModel().getNumRows(); i++) {
             for (int j = 0; j < frame.getModel().getNumColumns(); j++) {
-                final MazeTraversalButton button = new MazeTraversalButton(new MazeTraversalTile(i, j));
+                final MazeTraversalButton button = new MazeTraversalButton(i, j);
                 buttons[i][j] = button;
                 if (i == frame.getModel().getNumRows() / 2 && j == (frame.getModel().getNumColumns() / 2) - 2) {
-                    frame.getModel().getTile(i, j).setValue("O");
+                    frame.getModel().setTileValue(i, j, "O");
                     button.setImage("Start");
                 } else if (i == frame.getModel().getNumRows() / 2 && j == (frame.getModel().getNumColumns() / 2) + 2) {
-                    frame.getModel().getTile(i, j).setValue("X");
+                    frame.getModel().setTileValue(i, j, "X");
                     button.setImage("Target");
                 }
                 add(button);
@@ -41,42 +41,38 @@ public class MazeTraversalPanel extends JPanel implements KeyListener {
                                 case "O":
                                     for (int i = 0; i < frame.getModel().getNumRows(); i++) {
                                         for (int j = 0; j < frame.getModel().getNumColumns(); j++) {
-                                            if (frame.getModel().getTile(i, j).getValue().equals("O")) {
-                                                frame.getModel().getTile(i, j).setValue(" ");
+                                            if (frame.getModel().getTileValue(i, j).equals("O")) {
+                                                frame.getModel().setTileValue(i, j, " ");
                                                 buttons[i][j].setImage("Normal");
                                             }
                                         }
                                     }
-                                    frame.getModel().getTile(button.tile.getRow(), button.tile.getColumn())
-                                            .setValue("O");
+                                    frame.getModel().setTileValue(button.getRow(), button.getColumn(), "O");
                                     button.setImage("Start");
                                     break;
                                 case "X":
                                     for (int i = 0; i < frame.getModel().getNumRows(); i++) {
                                         for (int j = 0; j < frame.getModel().getNumColumns(); j++) {
-                                            if (frame.getModel().getTile(i, j).getValue().equals("X")) {
-                                                frame.getModel().getTile(i, j).setValue(" ");
+                                            if (frame.getModel().getTileValue(i, j).equals("X")) {
+                                                frame.getModel().setTileValue(i, j, " ");
                                                 buttons[i][j].setImage("Normal");
                                             }
                                         }
                                     }
-                                    frame.getModel().getTile(button.tile.getRow(), button.tile.getColumn())
-                                            .setValue("X");
+                                    frame.getModel().setTileValue(button.getRow(), button.getColumn(), "X");
                                     button.setImage("Target");
                                     break;
                                 case " ":
-                                    if (frame.getModel().getTile(button.tile.getRow(), button.tile.getColumn())
-                                            .getValue().equals(" ")) {
-                                        frame.getModel().getTile(button.tile.getRow(), button.tile.getColumn())
-                                                .setValue("#");
+                                    if (frame.getModel().getTileValue(button.getRow(), button.getColumn())
+                                            .equals(" ")) {
+                                        frame.getModel().setTileValue(button.getRow(), button.getColumn(), "#");
                                         button.setImage("Wall");
                                     }
                                     break;
                                 case "#":
-                                    if (frame.getModel().getTile(button.tile.getRow(), button.tile.getColumn())
-                                            .getValue().equals("#")) {
-                                        frame.getModel().getTile(button.tile.getRow(), button.tile.getColumn())
-                                                .setValue(" ");
+                                    if (frame.getModel().getTileValue(button.getRow(), button.getColumn())
+                                            .equals("#")) {
+                                        frame.getModel().setTileValue(button.getRow(), button.getColumn(), " ");
                                         button.setImage("Normal");
                                         break;
                                     }
@@ -86,15 +82,14 @@ public class MazeTraversalPanel extends JPanel implements KeyListener {
 
                     public void mousePressed(MouseEvent e) {
                         mousePressed = true;
-                        pressedTileValue = frame.getModel().getTile(button.tile.getRow(), button.tile.getColumn())
-                                .getValue();
+                        pressedTileValue = frame.getModel().getTileValue(button.getRow(), button.getColumn());
                         switch (pressedTileValue) {
                             case " ":
-                                frame.getModel().getTile(button.tile.getRow(), button.tile.getColumn()).setValue("#");
+                                frame.getModel().setTileValue(button.getRow(), button.getColumn(), "#");
                                 button.setImage("Wall");
                                 break;
                             case "#":
-                                frame.getModel().getTile(button.tile.getRow(), button.tile.getColumn()).setValue(" ");
+                                frame.getModel().setTileValue(button.getRow(), button.getColumn(), " ");
                                 button.setImage("Normal");
                                 break;
                         }
@@ -118,7 +113,8 @@ public class MazeTraversalPanel extends JPanel implements KeyListener {
     }
 
     private class MazeTraversalButton extends JButton {
-        private final MazeTraversalTile tile;
+        private int row;
+        private int column;
         private final ImageIcon NORMAL_TILE = new ImageIcon("Images/Normal_Tile.png");
         private final ImageIcon STARTING_TILE = new ImageIcon("Images/Starting_Tile.png");
         private final ImageIcon TARGET_TILE = new ImageIcon("Images/Target_Tile.png");
@@ -129,9 +125,18 @@ public class MazeTraversalPanel extends JPanel implements KeyListener {
         private final ImageIcon NOPATHSTARTING_TILE = new ImageIcon("Images/NoPathStarting_Tile.png");
         private final ImageIcon NOPATHTARGET_TILE = new ImageIcon("Images/NoPathTarget_Tile.png");
 
-        public MazeTraversalButton(final MazeTraversalTile tile) {
-            this.tile = tile;
+        public MazeTraversalButton(int row, int column) {
+            this.row = row;
+            this.column = column;
             setIcon(NORMAL_TILE);
+        }
+
+        public int getRow() {
+            return row;
+        }
+
+        public int getColumn() {
+            return column;
         }
 
         public void setImage(String name) {
@@ -173,12 +178,12 @@ public class MazeTraversalPanel extends JPanel implements KeyListener {
     private void resetMaze() {
         for (int i = 0; i < frame.getModel().getNumRows(); i++) {
             for (int j = 0; j < frame.getModel().getNumColumns(); j++) {
-                if (frame.getModel().getTile(i, j).getValue().equals("+")) {
-                    frame.getModel().getTile(i, j).setValue(" ");
+                if (frame.getModel().getTileValue(i, j).equals("+")) {
+                    frame.getModel().setTileValue(i, j, " ");
                     buttons[i][j].setImage("Normal");
-                } else if (frame.getModel().getTile(i, j).getValue().equals("O")) {
+                } else if (frame.getModel().getTileValue(i, j).equals("O")) {
                     buttons[i][j].setImage("Start");
-                } else if (frame.getModel().getTile(i, j).getValue().equals("X")) {
+                } else if (frame.getModel().getTileValue(i, j).equals("X")) {
                     buttons[i][j].setImage("Target");
                 }
             }
@@ -189,15 +194,15 @@ public class MazeTraversalPanel extends JPanel implements KeyListener {
     private void paintPath(int distance) {
         for (int i = 0; i < frame.getModel().getNumRows(); i++) {
             for (int j = 0; j < frame.getModel().getNumColumns(); j++) {
-                if (frame.getModel().getTile(i, j).getValue().equals("+")) {
+                if (frame.getModel().getTileValue(i, j).equals("+")) {
                     buttons[i][j].setImage("Path");
-                } else if (frame.getModel().getTile(i, j).getValue().equals("O")) {
+                } else if (frame.getModel().getTileValue(i, j).equals("O")) {
                     if (distance == -1) {
                         buttons[i][j].setImage("No Path Starting");
                     } else {
                         buttons[i][j].setImage("Path Starting");
                     }
-                } else if (frame.getModel().getTile(i, j).getValue().equals("X")) {
+                } else if (frame.getModel().getTileValue(i, j).equals("X")) {
                     if (distance == -1) {
                         buttons[i][j].setImage("No Path Target");
                     } else {
