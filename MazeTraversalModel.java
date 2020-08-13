@@ -190,7 +190,7 @@ public class MazeTraversalModel {
         for (int i = 0; i < availableAdjacent.length; i++) {
             if (availableAdjacent[i] != null && availableAdjacent[i].getValue() == "#") {
                 availableAdjacent[i] = null;
-            } else if (availableAdjacent[i].hasBeenDiscovered()) {
+            } else if (availableAdjacent[i] != null && availableAdjacent[i].hasBeenDiscovered()) {
                 availableAdjacent[i] = null;
             }
         }

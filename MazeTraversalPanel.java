@@ -66,6 +66,8 @@ public class MazeTraversalPanel extends JPanel implements KeyListener {
         private final ImageIcon PATH_TILE = new ImageIcon("Images/Path_Tile.png");
         private final ImageIcon PATHSTARTING_TILE = new ImageIcon("Images/PathStarting_Tile.png");
         private final ImageIcon PATHTARGET_TILE = new ImageIcon("Images/PathTarget_Tile.png");
+        private final ImageIcon NOPATHSTARTING_TILE = new ImageIcon("Images/NoPathStarting_Tile.png");
+        private final ImageIcon NOPATHTARGET_TILE = new ImageIcon("Images/NoPathTarget_Tile.png");
 
         public MazeTraversalButton(final MazeTraversalTile tile) {
             this.tile = tile;
@@ -95,6 +97,12 @@ public class MazeTraversalPanel extends JPanel implements KeyListener {
                 case "Path Target":
                     setIcon(PATHTARGET_TILE);
                     break;
+                case "No Path Starting":
+                    setIcon(NOPATHSTARTING_TILE);
+                    break;
+                case "No Path Target":
+                    setIcon(NOPATHTARGET_TILE);
+                    break;
                 default:
                     setIcon(NORMAL_TILE);
                     break;
@@ -118,15 +126,23 @@ public class MazeTraversalPanel extends JPanel implements KeyListener {
         frame.getModel().resetDiscoveredTiles();
     }
 
-    private void paintPath() {
+    private void paintPath(int distance) {
         for (int i = 0; i < frame.getModel().getNumRows(); i++) {
             for (int j = 0; j < frame.getModel().getNumColumns(); j++) {
                 if (frame.getModel().getTile(i, j).getValue().equals("+")) {
                     buttons[i][j].setImage("Path");
                 } else if (frame.getModel().getTile(i, j).getValue().equals("O")) {
-                    buttons[i][j].setImage("Path Starting");
+                    if (distance == -1) {
+                        buttons[i][j].setImage("No Path Starting");
+                    } else {
+                        buttons[i][j].setImage("Path Starting");
+                    }
                 } else if (frame.getModel().getTile(i, j).getValue().equals("X")) {
-                    buttons[i][j].setImage("Path Target");
+                    if (distance == -1) {
+                        buttons[i][j].setImage("No Path Target");
+                    } else {
+                        buttons[i][j].setImage("Path Target");
+                    }
                 }
             }
         }
@@ -143,8 +159,9 @@ public class MazeTraversalPanel extends JPanel implements KeyListener {
 
     public void keyPressed(final KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            System.out.println("Distance: " + frame.getModel().breadthFirstSearch());
-            paintPath();
+            int distance = frame.getModel().breadthFirstSearch();
+            System.out.println("Distance: " + distance);
+            paintPath(distance);
         } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             System.out.println("Resetting... ");
             resetMaze();
