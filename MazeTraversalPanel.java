@@ -59,11 +59,13 @@ public class MazeTraversalPanel extends JPanel implements KeyListener {
 
     private class MazeTraversalButton extends JButton {
         private final MazeTraversalTile tile;
-        private ImageIcon NORMAL_TILE = new ImageIcon("Images/Normal_Tile.png");
-        private ImageIcon STARTING_TILE = new ImageIcon("Images/Starting_Tile.png");
-        private ImageIcon TARGET_TILE = new ImageIcon("Images/Target_Tile.png");
-        private ImageIcon WALL_TILE = new ImageIcon("Images/Wall_Tile.png");
-        private ImageIcon PATH_TILE = new ImageIcon("Images/Path_Tile.png");
+        private final ImageIcon NORMAL_TILE = new ImageIcon("Images/Normal_Tile.png");
+        private final ImageIcon STARTING_TILE = new ImageIcon("Images/Starting_Tile.png");
+        private final ImageIcon TARGET_TILE = new ImageIcon("Images/Target_Tile.png");
+        private final ImageIcon WALL_TILE = new ImageIcon("Images/Wall_Tile.png");
+        private final ImageIcon PATH_TILE = new ImageIcon("Images/Path_Tile.png");
+        private final ImageIcon PATHSTARTING_TILE = new ImageIcon("Images/PathStarting_Tile.png");
+        private final ImageIcon PATHTARGET_TILE = new ImageIcon("Images/PathTarget_Tile.png");
 
         public MazeTraversalButton(final MazeTraversalTile tile) {
             this.tile = tile;
@@ -87,6 +89,12 @@ public class MazeTraversalPanel extends JPanel implements KeyListener {
                 case "Path":
                     setIcon(PATH_TILE);
                     break;
+                case "Path Starting":
+                    setIcon(PATHSTARTING_TILE);
+                    break;
+                case "Path Target":
+                    setIcon(PATHTARGET_TILE);
+                    break;
                 default:
                     setIcon(NORMAL_TILE);
                     break;
@@ -100,6 +108,10 @@ public class MazeTraversalPanel extends JPanel implements KeyListener {
                 if (frame.getModel().getTile(i, j).getValue().equals("+")) {
                     frame.getModel().getTile(i, j).setValue(" ");
                     buttons[i][j].setImage("Normal");
+                } else if (frame.getModel().getTile(i, j).getValue().equals("O")) {
+                    buttons[i][j].setImage("Start");
+                } else if (frame.getModel().getTile(i, j).getValue().equals("X")) {
+                    buttons[i][j].setImage("Target");
                 }
             }
         }
@@ -111,6 +123,10 @@ public class MazeTraversalPanel extends JPanel implements KeyListener {
             for (int j = 0; j < frame.getModel().getNumColumns(); j++) {
                 if (frame.getModel().getTile(i, j).getValue().equals("+")) {
                     buttons[i][j].setImage("Path");
+                } else if (frame.getModel().getTile(i, j).getValue().equals("O")) {
+                    buttons[i][j].setImage("Path Starting");
+                } else if (frame.getModel().getTile(i, j).getValue().equals("X")) {
+                    buttons[i][j].setImage("Path Target");
                 }
             }
         }
