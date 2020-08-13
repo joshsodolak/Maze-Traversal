@@ -11,6 +11,7 @@ public class MazeTraversalTile extends JButton {
     private int row;
     private int column;
     private MazeTraversalTile parent;
+    private String savedValue;
 
     /**
      * Constructor for the internal MazeTraversalTile class.
@@ -22,6 +23,7 @@ public class MazeTraversalTile extends JButton {
         this.row = row;
         this.column = column;
         this.parent = null;
+        this.savedValue = value;
     }
 
     /**
@@ -43,6 +45,14 @@ public class MazeTraversalTile extends JButton {
      */
     public void discover() {
         isDiscovered = true;
+    }
+
+    public String getSavedValue() {
+        return savedValue;
+    }
+
+    public void setSavedValue(String value) {
+        this.savedValue = value;
     }
 
     /**
