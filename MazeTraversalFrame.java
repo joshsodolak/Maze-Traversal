@@ -1,6 +1,7 @@
 import javax.swing.JFrame;
 
 public class MazeTraversalFrame extends JFrame {
+    private static final long serialVersionUID = -9018282878606968922L;
     private MazeTraversalModel model;
     private MazeTraversalPanel panel;
 

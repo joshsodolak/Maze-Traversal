@@ -24,13 +24,11 @@ public class MazeTraversalModel {
      * Internal class for storing all data at each tile in the maze.
      */
     private class MazeTraversalTile {
-        private static final long serialVersionUID = 1L;
         private boolean isDiscovered;
         private String value;
         private int row;
         private int column;
         private MazeTraversalTile parent;
-        private String savedValue;
 
         /**
          * Constructor for the internal MazeTraversalTile class.
@@ -41,7 +39,6 @@ public class MazeTraversalModel {
             this.row = row;
             this.column = column;
             this.parent = null;
-            this.savedValue = value;
         }
 
         /**
@@ -63,14 +60,6 @@ public class MazeTraversalModel {
          */
         public void discover() {
             isDiscovered = true;
-        }
-
-        public String getSavedValue() {
-            return savedValue;
-        }
-
-        public void setSavedValue(String value) {
-            this.savedValue = value;
         }
 
         /**
@@ -165,80 +154,6 @@ public class MazeTraversalModel {
             for (int j = 0; j < numColumns; j++) {
                 tiles[i][j] = new MazeTraversalTile(i, j);
             }
-        }
-    }
-
-    /**
-     * Helper method for building the maze that fills the edges of the maze.
-     */
-    private void fillEdges() {
-        for (int i = 0; i < numRows; i++) {
-            tiles[i][0].setValue("#");
-            tiles[i][numColumns - 1].setValue("#");
-        }
-        for (int i = 1; i < numColumns - 1; i++) {
-            tiles[0][i].setValue("#");
-            tiles[numRows - 1][i].setValue("#");
-        }
-    }
-
-    /**
-     * Constructs a maze based on a seed that is input. For testing purposes.
-     * 
-     * @param seed The seed of the maze to be built.
-     */
-    private void buildMaze(int seed) {
-        fillEdges();
-        if (seed == 0) {
-            for (int i = 2; i < numRows - 2; i++) {
-                tiles[i][2].setValue("#");
-                tiles[i][numColumns - 3].setValue("#");
-            }
-            for (int i = 3; i < numColumns - 3; i++) {
-                tiles[2][i].setValue("#");
-                tiles[numRows - 3][i].setValue("#");
-            }
-
-            for (int i = 4; i < numRows - 4; i++) {
-                tiles[i][4].setValue("#");
-                tiles[i][numColumns - 5].setValue("#");
-            }
-            for (int i = 5; i < numColumns - 5; i++) {
-                tiles[4][i].setValue("#");
-                tiles[numRows - 5][i].setValue("#");
-            }
-
-            for (int i = 6; i < numRows - 6; i++) {
-                tiles[i][6].setValue("#");
-                tiles[i][numColumns - 7].setValue("#");
-            }
-            for (int i = 6; i < numColumns - 7; i++) {
-                tiles[6][i].setValue("#");
-                tiles[numRows - 7][i].setValue("#");
-            }
-
-            tiles[1][10].setValue("#");
-            tiles[13][2].setValue("#");
-            tiles[11][2].setValue(" ");
-            tiles[3][16].setValue("#");
-            tiles[6][4].setValue(" ");
-            tiles[7][5].setValue("#");
-            tiles[4][17].setValue(" ");
-            tiles[11][9].setValue("#");
-            tiles[9][22].setValue(" ");
-
-            tiles[numRows - 1][1].setValue("O");
-            tiles[1][numColumns - 1].setValue("X");
-        } else if (seed == 1) {
-            tiles[1][4].setValue("#");
-            tiles[2][4].setValue("#");
-            tiles[3][4].setValue("#");
-            tiles[4][4].setValue("#");
-            tiles[5][4].setValue("#");
-            tiles[6][4].setValue("#");
-            tiles[7][4].setValue("#");
-            tiles[2][2].setValue("O");
-            tiles[2][7].setValue("X");
         }
     }
 

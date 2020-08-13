@@ -1,6 +1,6 @@
 import javax.swing.JPanel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.ImageIcon;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class MazeTraversalPanel extends JPanel implements KeyListener {
+    private static final long serialVersionUID = 3529259085743413812L;
     private final MazeTraversalFrame frame;
     private final MazeTraversalButton[][] buttons;
     private String pressedTileValue;
@@ -113,6 +114,7 @@ public class MazeTraversalPanel extends JPanel implements KeyListener {
     }
 
     private class MazeTraversalButton extends JButton {
+        private static final long serialVersionUID = -5190229012940389911L;
         private int row;
         private int column;
         private final ImageIcon NORMAL_TILE = new ImageIcon("Images/Normal_Tile.png");
@@ -218,7 +220,6 @@ public class MazeTraversalPanel extends JPanel implements KeyListener {
     }
 
     public void keyTyped(final KeyEvent e) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -235,7 +236,6 @@ public class MazeTraversalPanel extends JPanel implements KeyListener {
     }
 
     public void keyReleased(final KeyEvent e) {
-        // TODO Auto-generated method stub
 
     }
 }
