@@ -1,5 +1,7 @@
 import javax.swing.JPanel;
 import javax.swing.JButton;
+//import javax.swing.JPopupMenu;
+import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
@@ -26,13 +28,20 @@ public class MazeTraversalPanel extends JPanel implements KeyListener {
             for (int j = 0; j < frame.getModel().getNumColumns(); j++) {
                 final MazeTraversalButton button = new MazeTraversalButton(i, j);
                 buttons[i][j] = button;
-                if (i == frame.getModel().getNumRows() / 2 && j == (frame.getModel().getNumColumns() / 2) - 2) {
-                    frame.getModel().setTileValue(i, j, "O");
+                if (frame.getModel().getTileValue(i, j).equals("O")) {
                     button.setImage("Start");
-                } else if (i == frame.getModel().getNumRows() / 2 && j == (frame.getModel().getNumColumns() / 2) + 2) {
-                    frame.getModel().setTileValue(i, j, "X");
+                } else if (frame.getModel().getTileValue(i, j).equals("X")) {
                     button.setImage("Target");
                 }
+                // if (i == frame.getModel().getNumRows() / 2 && j ==
+                // (frame.getModel().getNumColumns() / 2) - 2) {
+                // frame.getModel().setTileValue(i, j, "O");
+                // button.setImage("Start");
+                // } else if (i == frame.getModel().getNumRows() / 2 && j ==
+                // (frame.getModel().getNumColumns() / 2) + 2) {
+                // frame.getModel().setTileValue(i, j, "X");
+                // button.setImage("Target");
+                // }
                 add(button);
                 button.addKeyListener(this);
                 button.addMouseListener(new MouseAdapter() {
@@ -225,13 +234,19 @@ public class MazeTraversalPanel extends JPanel implements KeyListener {
 
     public void keyPressed(final KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            long startingTime = System.currentTimeMillis();
             int distance = frame.getModel().breadthFirstSearch();
-            System.out.println("Distance: " + distance);
+            long executionTime = System.currentTimeMillis() - startingTime;
             paintPath(distance);
+            JOptionPane
+                    .showConfirmDialog(
+                            frame, "Path-Finding Completed!\nShortest Distance: " + distance
+                                    + " tiles\nCompletion Time: " + executionTime + " seconds",
+                            "Path-Finding Completed!", JOptionPane.PLAIN_MESSAGE);
         } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            System.out.println("Resetting... ");
+            // System.out.println("Resetting... ");
             resetMaze();
-            System.out.println("Done");
+            // System.out.println("Done");
         }
     }
 

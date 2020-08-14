@@ -17,7 +17,6 @@ public class MazeTraversalModel {
         this.numColumns = numColumns;
         tiles = new MazeTraversalTile[numRows][numColumns];
         instantiateTiles();
-        // buildMaze(/* 0 */1);
     }
 
     /**
@@ -153,6 +152,11 @@ public class MazeTraversalModel {
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numColumns; j++) {
                 tiles[i][j] = new MazeTraversalTile(i, j);
+                if (i == numRows / 2 && j == (numRows / 2) - 2) {
+                    tiles[i][j].value = "O";
+                } else if (i == numRows / 2 && j == (numColumns / 2) + 2) {
+                    tiles[i][j].value = "X";
+                }
             }
         }
     }
@@ -202,16 +206,16 @@ public class MazeTraversalModel {
     private MazeTraversalTile[] getAvailableAdjacent(MazeTraversalTile tile) {
         MazeTraversalTile[] availableAdjacent = new MazeTraversalTile[4];
 
-        if (tile.getRow() == 0) { // North Tile
+        if (tile.getColumn() == numColumns - 1) { // East Tile
             availableAdjacent[0] = null;
         } else {
-            availableAdjacent[0] = tiles[tile.getRow() - 1][tile.getColumn()];
+            availableAdjacent[0] = tiles[tile.getRow()][tile.getColumn() + 1];
         }
 
-        if (tile.getColumn() == numColumns - 1) { // East Tile
+        if (tile.getRow() == 0) { // North Tile
             availableAdjacent[1] = null;
         } else {
-            availableAdjacent[1] = tiles[tile.getRow()][tile.getColumn() + 1];
+            availableAdjacent[1] = tiles[tile.getRow() - 1][tile.getColumn()];
         }
 
         if (tile.getRow() == numRows - 1) { // South Tile
@@ -237,6 +241,24 @@ public class MazeTraversalModel {
         return availableAdjacent;
     }
 
+    public void visualizeCurrentPath(MazeTraversalTile tile) {
+        while (!tile.value.equals("O")) {
+            if (tile.value.equals("X")) {
+                tile = tile.parent;
+                continue;
+            }
+            tile.value = "+";
+            tile = tile.parent;
+        }
+    }
+
+    public void removeVisualization(MazeTraversalTile tile) {
+        while (!tile.value.equals("O")) {
+            tile.value = " ";
+            tile = tile.parent;
+        }
+    }
+
     /**
      * Performs the breadth first search algorithm to find the shortest path from
      * the starting point to the destination
@@ -247,13 +269,14 @@ public class MazeTraversalModel {
     public int breadthFirstSearch() {
         Queue<MazeTraversalTile> queue = new LinkedList<MazeTraversalTile>();
         MazeTraversalTile startingPosition = getStartingPosition();
-        long startingTime = System.currentTimeMillis();
 
         startingPosition.discover();
         queue.add(startingPosition);
 
         while (queue.size() > 0) {
             MazeTraversalTile parentTile = queue.poll();
+            visualizeCurrentPath(parentTile);
+            printMaze();
             if (parentTile.getValue().equals("X")) {
                 int distance = 1;
                 parentTile = parentTile.getParent();
@@ -262,8 +285,6 @@ public class MazeTraversalModel {
                     parentTile = parentTile.getParent();
                     distance++;
                 }
-                System.out.println("Completed in " + (System.currentTimeMillis() - startingTime));
-                System.out.println("All done!");
                 return distance;
             }
             MazeTraversalTile[] adjacentTiles = getAvailableAdjacent(parentTile);
@@ -279,9 +300,8 @@ public class MazeTraversalModel {
                     queue.add(currentTile);
                 }
             }
+            removeVisualization(parentTile);
         }
-        System.out.println("Completed in " + (System.currentTimeMillis() - startingTime));
-        System.out.println("All done!");
         return -1;
     }
 
