@@ -3,6 +3,7 @@ import java.util.Queue;
 
 public class MazeTraversalModel {
     private MazeTraversalTile[][] tiles;
+    private MazeTraversalFrame frame;
     private int numRows;
     private int numColumns;
 
@@ -12,7 +13,8 @@ public class MazeTraversalModel {
      * @param numRows    the number of rows in the maze
      * @param numColumns the number of columns in the maze
      */
-    public MazeTraversalModel(int numRows, int numColumns) {
+    public MazeTraversalModel(MazeTraversalFrame frame, int numRows, int numColumns) {
+        this.frame = frame;
         this.numRows = numRows;
         this.numColumns = numColumns;
         tiles = new MazeTraversalTile[numRows][numColumns];
@@ -247,7 +249,7 @@ public class MazeTraversalModel {
                 tile = tile.parent;
                 continue;
             }
-            tile.value = "+";
+            tile.value = "x";
             tile = tile.parent;
         }
     }
@@ -276,7 +278,6 @@ public class MazeTraversalModel {
         while (queue.size() > 0) {
             MazeTraversalTile parentTile = queue.poll();
             visualizeCurrentPath(parentTile);
-            printMaze();
             if (parentTile.getValue().equals("X")) {
                 int distance = 1;
                 parentTile = parentTile.getParent();

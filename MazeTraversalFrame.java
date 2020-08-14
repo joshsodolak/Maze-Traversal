@@ -10,7 +10,7 @@ public class MazeTraversalFrame extends JFrame {
         setSize(numRows * 32, numColumns * 32);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        model = new MazeTraversalModel(numRows, numColumns);
+        model = new MazeTraversalModel(this, numRows, numColumns);
         panel = new MazeTraversalPanel(this);
         add(panel);
         setVisible(true);
@@ -18,5 +18,9 @@ public class MazeTraversalFrame extends JFrame {
 
     public MazeTraversalModel getModel() {
         return model;
+    }
+
+    public MazeTraversalPanel getView() {
+        return panel;
     }
 }
